@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import path from "path";
 import { v4 as uuidv4 } from "uuid";
+import cors from "cors";
 
 import weatherRouter from "./routes/weather.routes.js";
 import userRouter from "./routes/user.routes.js";
@@ -29,6 +30,12 @@ mongoose
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 app.use(async (req, res, next) => {
   let token = req.cookies.token;
 
