@@ -63,7 +63,7 @@ export const getWeatherByCity = async (req, res, next) => {
       await pushInDB(req, existingWeatherData.city_name, next);
       return res.status(200).json(existingWeatherData);
     } else {
-      console.log(API_KEY);
+      // console.log(API_KEY);
       const response = await axios.get(
         `https://api.openweathermap.org/data/2.5/weather?q=${city_name}&appid=${API_KEY}`
       );

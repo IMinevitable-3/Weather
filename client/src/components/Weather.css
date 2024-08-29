@@ -2,7 +2,8 @@
   place-self: center;
   padding: 40px;
   border-radius: 10px;
-  background-image: linear-gradient(45deg, #00ffff, #ff00ff);
+  border: #000;
+  border-style: double;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,9 +13,10 @@
   align-items: center;
   gap: 12px;
 }
-.search-bar button {
+.search-bar .active-button {
   height: 50px;
   border-radius: 50%;
+  background-color: #fff;
 }
 .search-bar img {
   width: 50px;
@@ -26,12 +28,12 @@
 }
 .search-bar input {
   height: 60px;
-  border: none;
+  border: double;
   border-radius: 40px;
   padding-left: 25px;
-  color: #626262;
+  color: #000;
   outline: none;
-  background: #ebfffc;
+  background: #fff;
   font-size: 20px;
 }
 .weather-icon {
@@ -39,19 +41,19 @@
   margin: 30px 0;
 }
 .temperature {
-  color: #fff;
+  color: #000000;
   font-size: 70px;
   line-height: 1;
 }
 .location {
-  color: #fff;
+  color: #000000;
   font-size: 40px;
 }
 
 .weather-data {
   width: 100%;
   margin-top: 40px;
-  color: #fff;
+  color: #000;
   display: flex;
   justify-content: space-between;
 }
@@ -70,9 +72,10 @@
   margin-top: 10px;
 }
 .geo-button {
-  border: 1px solid #ffffff;
+  border: 2px groove #000;
   border-radius: 100px;
-
   padding: 0.5em 1.2em;
   margin: 5px;
+  background-color: #fff;
+  cursor: pointer;
 }

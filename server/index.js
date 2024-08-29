@@ -28,20 +28,25 @@ mongoose
 
 // middlewares
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
+
 app.use(
   cors({
-    origin: "*",
+    origin: "http://localhost:5173",
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    credentials: true,
   })
 );
+app.use(express.json());
+app.use(cookieParser());
 app.use(async (req, res, next) => {
   let token = req.cookies.token;
 
   if (!token) {
     token = uuidv4();
-    res.cookie("token", token, { httpOnly: true });
+    res.cookie("token", token, {
+      httpOnly: true,
+      maxAge: 30 * 24 * 60 * 60 * 1000,
+    });
     await SearchHistory.create({ token, history: [] });
   }
 

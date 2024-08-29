@@ -1,0 +1,9 @@
+.historymain {
+  margin: 40px;
+  padding: 40px;
+  border-radius: 10px;
+  border: #000;
+  border-style: double;
+  display: flex;
+  flex-direction: column;
+}
