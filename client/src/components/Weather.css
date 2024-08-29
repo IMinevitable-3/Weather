@@ -12,12 +12,17 @@
   align-items: center;
   gap: 12px;
 }
+.search-bar button {
+  height: 50px;
+  border-radius: 50%;
+}
 .search-bar img {
   width: 50px;
   padding: 15px;
   border-radius: 50%;
   background-color: #ebfffc;
   cursor: pointer;
+  object-fit: fill;
 }
 .search-bar input {
   height: 60px;
@@ -63,4 +68,11 @@
 .weather-data .col img {
   width: 60px;
   margin-top: 10px;
+}
+.geo-button {
+  border: 1px solid #ffffff;
+  border-radius: 100px;
+
+  padding: 0.5em 1.2em;
+  margin: 5px;
 }

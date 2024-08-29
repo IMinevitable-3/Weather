@@ -29,19 +29,32 @@ const Icons = {
   "13n": snowIcon,
 };
 const Weather = () => {
-  const [weatherData, setWeatherData] = useState(false);
-  const inpRef = useRef();
-  const search = async (city) => {
+  const [weatherData, setWeatherData] = useState({
+    humidity: "-",
+    windSpeed: "-",
+    temperature: "-",
+    location: "NA",
+    icon: clearIcon,
+  });
+  const [searchQuery, setSearchQuery] = useState("");
+  const search = async (e) => {
+    e.preventDefault();
     try {
-      if (city === "") return;
-      const apiUrl = import.meta.env.VITE_BASE_URL + "api/getWeatherByCity";
-      console.log(apiUrl);
-      const response = await axios.post(apiUrl, { city_name: city });
-      //   console.log(response);
-      if (!response.ok) {
-        alert("city not found");
-        return;
+      const cityOrCoords = searchQuery.trim();
+      if (cityOrCoords === "") return;
+      let apiUrl, data;
+      if (/^[-+]?\d{1,2}\.\d+[,;\s][-+]?\d{1,3}\.\d+$/.test(cityOrCoords)) {
+        const [lat, lon] = cityOrCoords.split(/[,;\s]/).map(Number);
+        apiUrl = "http://localhost:8000/api/getWeatherByCoords/";
+        data = { lat, lon };
+      } else {
+        const city = cityOrCoords;
+        apiUrl = import.meta.env.VITE_BASE_URL + "api/getWeatherByCity";
+        data = { city_name: city };
       }
+      console.log(apiUrl, data);
+      const response = await axios.post(apiUrl, data);
+      console.log(response.data);
       setWeatherData({
         humidity: response.data.main.humidity,
         windSpeed: response.data.wind.speed,
@@ -51,21 +64,52 @@ const Weather = () => {
       });
     } catch (err) {
       console.log(err);
+      alert("City not found");
     }
   };
-  useEffect(() => {
-    search("Gajuwaka");
-  }, []);
+  const getWeatherByGeolocation = async () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        try {
+          const { latitude: lat, longitude: lon } = position.coords;
+          console.log(lat, lon);
+          const apiUrl =
+            import.meta.env.VITE_BASE_URL + "api/getWeatherByCoords/";
+          const response = await axios.post(apiUrl, { lat, lon });
+
+          setWeatherData({
+            humidity: response.data.main.humidity,
+            windSpeed: response.data.wind.speed,
+            temperature: Math.floor(response.data.main.temp - 273.15),
+            location: response.data.name || `${lat}, ${lon}`,
+            icon: Icons[response.data.weather[0].icon] || clearIcon,
+          });
+        } catch (err) {
+          console.log(err);
+          alert("Unable to fetch weather for your location");
+        }
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  };
   return (
     <div className="weather">
-      <div className="search-bar">
-        <input ref={inpRef} type="text" placeholder="search for a city" />
-        <img
-          src={searchIcon}
-          alt="search"
-          onClick={() => search(inpRef.current.value)}
-        />
-      </div>
+      <form onSubmit={search}>
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="city or lat,long"
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button type="submit">
+            <img src={searchIcon} alt="search" />
+          </button>
+        </div>
+        <button onClick={getWeatherByGeolocation} className="geo-button">
+          Use My Location
+        </button>
+      </form>
       <img src={weatherData?.icon} alt="" className="weather-icon" />
       <p className="temperature">{weatherData?.temperature}°c</p>
       <p className="location">{weatherData?.location}</p>
